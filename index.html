@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3syncX Server Summoner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background-color: #111;
+      border: 2px solid #0ff;
+      border-radius: 15px;
+      padding: 20px 40px;
+      text-align: center;
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    input {
+      width: 300px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 8px;
+      background: #0ff;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #09d;
+      color: white;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: #0ff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 24px;
+    }
+
+    .progress {
+      margin-top: 20px;
+      width: 300px;
+      height: 20px;
+      background: #333;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #0ff;
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>D3syncX Server Summoner</h2>
+    <p>Paste your private server link:</p>
+    <input id="serverLink" type="text" placeholder="https://www.roblox.com/...">
+    <br>
+    <button onclick="startSummoning()">Start Summoning</button>
+  </div>
+
+  <div class="loading-screen" id="loading">
+    <p id="status">Connecting...</p>
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <script>
+    function startSummoning() {
+      const link = document.getElementById("serverLink").value.trim();
+      if (!link.startsWith("https://www.roblox.com/")) {
+        alert("Invalid server link!");
+        return;
+      }
+
+      document.querySelector(".box").style.display = "none";
+      const loading = document.getElementById("loading");
+      const progressBar = document.getElementById("progressBar");
+      const status = document.getElementById("status");
+      loading.style.display = "flex";
+
+      let percent = 0;
+      const totalTime = 5 * 60 * 1000; // 5 Minuten
+      const interval = totalTime / 100;
+
+      const timer = setInterval(() => {
+        percent++;
+        progressBar.style.width = percent + "%";
+        status.innerText = "Loading... " + percent + "%";
+
+        if (percent >= 100) {
+          clearInterval(timer);
+          status.innerText = "OP Players have been summoned 😈";
+          setTimeout(() => {
+            loading.innerHTML = "<h1 style='color:#0ff;'>Summoning Complete!</h1>";
+          }, 2000);
+        }
+      }, interval);
+    }
+  </script>
+</body>
+</html>
